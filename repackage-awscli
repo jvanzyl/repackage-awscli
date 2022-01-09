@@ -20,6 +20,7 @@ mkdir -p ${downloads} > /dev/null 2>&1
 repackage="${PWD}/repackage"
 mkdir -p ${repackage} > /dev/null 2>&1
 work="${target}/tmp"
+mkdir -p ${work} > /dev/null 2>&1
 installLocation="${target}/awscli"
 
 if [ ! -f ${downloadFile} ]; then

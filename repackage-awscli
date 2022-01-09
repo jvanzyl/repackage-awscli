@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+version="2.4.9"
+
+if [ "${1}" = "linux" ]; then
+  os="linux"
+  arch="x86_64"
+  file="awscli-exe-linux-${arch}-${version}.zip"
+else
+  os="darwin"
+  arch="x86_64"
+  file="AWSCLIV2-${version}.pkg"
+fi
+
+url="https://awscli.amazonaws.com/${file}"
+target="${PWD}/target"
+downloads="${PWD}/downloads"
+downloadFile="${downloads}/${file}"
+mkdir -p ${downloads} > /dev/null 2>&1
+repackage="${PWD}/repackage"
+mkdir -p ${repackage} > /dev/null 2>&1
+work="${target}/tmp"
+installLocation="${target}/awscli"
+
+if [ ! -f ${downloadFile} ]; then
+  curl -o ${downloadFile} -L ${url}
+fi
+
+rm -rf ${target} > /dev/null 2>&1
+
+if [ "${1}" = "linux" ]; then
+  unzip ${downloadFile} -d ${target}
+  (
+  cd ${target}/aws/dist
+  rm -rf awscli/examples
+  tar -cvzf ${repackage}/awscli-${os}-${arch}-${version}.tar.gz *
+  )
+else
+  mkdir -p ${work} ${installLocation}
+  xar -C ${work} -xf ${downloadFile}
+  cd ${installLocation}
+  gzcat ${work}/aws-cli.pkg/Payload | cpio -id
+  (
+  cd ${target}/awscli/aws-cli
+  chmod -x Python
+  tar -cvzf ${repackage}/awscli-${os}-${arch}-${version}.tar.gz *
+  )
+fi

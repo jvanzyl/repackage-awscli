@@ -22,6 +22,7 @@ mkdir -p ${repackage} > /dev/null 2>&1
 work="${target}/tmp"
 mkdir -p ${work} > /dev/null 2>&1
 installLocation="${target}/awscli"
+mkdir -p ${installLocation} > /dev/null 2>&1
 
 if [ ! -f ${downloadFile} ]; then
   curl -o ${downloadFile} -L ${url}

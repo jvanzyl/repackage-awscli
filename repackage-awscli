@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version="2.4.9"
+version="$(cat AWS_CLI_VERSION | tr -d '\n')"
 
 if [ "${1}" = "linux" ]; then
   os="linux"

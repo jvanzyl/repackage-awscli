@@ -18,9 +18,9 @@ target="${PWD}/target"
 work="${target}/tmp"
 installLocation="${target}/awscli"
 repackage="${PWD}/repackage"
-rm -rf ${target} ${work} ${installLocation} ${repackage} > /dev/null 2>&1
-mkdir ${target} ${work} ${installLocation} ${repackage} /dev/null 2>&1
 
+rm -rf ${target} ${work} ${installLocation} ${repackage} > /dev/null 2>&1
+mkdir ${target} ${work} ${installLocation} ${repackage} > /dev/null 2>&1
 os="darwin"
 arch="x86_64"
 file="AWSCLIV2-${version}.pkg"
@@ -37,7 +37,6 @@ gzcat ${work}/aws-cli.pkg/Payload | cpio -id
 
 rm -rf ${target} ${work} ${installLocation} > /dev/null 2>&1
 mkdir ${target} ${work} ${installLocation} > /dev/null 2>&1
-
 os="linux"
 arch="x86_64"
 file="awscli-exe-linux-${arch}-${version}.zip"
@@ -52,7 +51,6 @@ unzip ${downloadFile} -d ${target}
 
 rm -rf ${target} ${work} ${installLocation} > /dev/null 2>&1
 mkdir ${target} ${work} ${installLocation} > /dev/null 2>&1
-
 os="linux"
 arch="aarch64"
 rm -rf ${target} > /dev/null 2>&1; mkdir ${target}

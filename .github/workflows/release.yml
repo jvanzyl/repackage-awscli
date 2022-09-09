@@ -1,0 +1,20 @@
+name: release
+
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+  build:
+    runs-on: macos-11
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: Repackage AWS CLI v2
+        run: ./repackage-awscli
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "repackage/*.tar.gz"
+          token: ${{ secrets.GITHUB_TOKEN }}

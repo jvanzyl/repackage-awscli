@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+version="$(cat AWS_CLI_VERSION | tr -d '\n')"
+
+function download() {
+  file="${1}"
+  url="https://awscli.amazonaws.com/${file}"
+  downloads="${PWD}/downloads"
+  mkdir -p ${downloads} > /dev/null 2>&1
+  downloadFile="${downloads}/${file}"
+  if [ ! -f ${downloadFile} ]; then
+    curl -o ${downloadFile} -L ${url}
+  fi
+  echo ${downloadFile}
+}
+
+target="${PWD}/target"
+work="${target}/tmp"
+installLocation="${target}/awscli"
+repackage="${PWD}/repackage"
+rm -rf ${target} ${work} ${installLocation} ${repackage} > /dev/null 2>&1
+mkdir ${target} ${work} ${installLocation} ${repackage} /dev/null 2>&1
+
+os="darwin"
+arch="x86_64"
+file="AWSCLIV2-${version}.pkg"
+downloadFile=$(download "${file}")
+mkdir -p ${work} ${installLocation}
+xar -C ${work} -xf ${downloadFile}
+cd ${installLocation}
+gzcat ${work}/aws-cli.pkg/Payload | cpio -id
+(
+  cd ${target}/awscli/aws-cli
+  chmod -x Python
+  tar -cvzf ${repackage}/awscli-${os}-${arch}-${version}.tar.gz *
+)
+
+rm -rf ${target} ${work} ${installLocation} > /dev/null 2>&1
+mkdir ${target} ${work} ${installLocation} > /dev/null 2>&1
+
+os="linux"
+arch="x86_64"
+file="awscli-exe-linux-${arch}-${version}.zip"
+rm -rf ${target} > /dev/null 2>&1; mkdir ${target}
+downloadFile=$(download "${file}")
+unzip ${downloadFile} -d ${target}
+(
+  cd ${target}/aws/dist
+  rm -rf awscli/examples
+  tar -cvzf ${repackage}/awscli-${os}-${arch}-${version}.tar.gz *
+)
+
+rm -rf ${target} ${work} ${installLocation} > /dev/null 2>&1
+mkdir ${target} ${work} ${installLocation} > /dev/null 2>&1
+
+os="linux"
+arch="aarch64"
+rm -rf ${target} > /dev/null 2>&1; mkdir ${target}
+file="awscli-exe-linux-${arch}-${version}.zip"
+downloadFile=$(download "${file}")
+unzip ${downloadFile} -d ${target}
+(
+  cd ${target}/aws/dist
+  rm -rf awscli/examples
+  tar -cvzf ${repackage}/awscli-${os}-${arch}-${version}.tar.gz *
+)

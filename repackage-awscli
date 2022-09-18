@@ -35,6 +35,10 @@ gzcat ${work}/aws-cli.pkg/Payload | cpio -id
   tar -cvzf ${repackage}/awscli-${os}-${arch}-${version}.tar.gz *
 )
 
+# Darwin only has x86 binaries but not arm to we'll just copy the archive
+# for now. We'll have to account for OS differences in the descriptors.
+(cd ${repackage} ; cp awscli-darwin-x86_64-${version}.tar.gz awscli-darwin-aarch64-${version}.tar.gz)
+
 rm -rf ${target} ${work} ${installLocation} > /dev/null 2>&1
 mkdir ${target} ${work} ${installLocation} > /dev/null 2>&1
 os="linux"

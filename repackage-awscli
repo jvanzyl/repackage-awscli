@@ -32,8 +32,11 @@ gzcat ${work}/aws-cli.pkg/Payload | cpio -id
 (
   cd ${target}/awscli/aws-cli
   chmod -x Python
-  tar -cvzf ${repackage}/awscli-${os}-${arch}-${version}.tar.gz *
+  tar -czf ${repackage}/awscli-${os}-${arch}-${version}.tar.gz *
 )
+
+# For Apple Silicon there is no pre-built package so we use x86 under emulation
+cp ${repackage}/awscli-${os}-${arch}-${version}.tar.gz ${repackage}/awscli-${os}-aarch64-${version}.tar.gz
 
 rm -rf ${target} ${work} ${installLocation} > /dev/null 2>&1
 mkdir ${target} ${work} ${installLocation} > /dev/null 2>&1
@@ -62,5 +65,5 @@ unzip ${downloadFile} -d ${target}
 (
   cd ${target}/aws/dist
   rm -rf awscli/examples
-  tar -cvzf ${repackage}/awscli-${os}-${arch}-${version}.tar.gz *
+  tar -czf ${repackage}/awscli-${os}-${arch}-${version}.tar.gz *
 )
